@@ -1,85 +1,44 @@
-<script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+  <el-container>
+    <el-header>
+      <el-menu :default-active="activateTab" mode="horizontal" @select="handleSelect" :ellipsis="false">
+        <el-menu-item index="arclight">Arclight</el-menu-item>
+        <el-menu-item index="downloads">Downloads</el-menu-item>
+        <el-menu-item index="docs">Docs</el-menu-item>
+        <div style="flex-grow: 1;" />
+        <el-menu-item>
+          <el-switch v-model="isDark" active-text="深色模式" />
+        </el-menu-item>
+      </el-menu>
+    </el-header>
+    <el-main>
+      <router-view />
+    </el-main>
+  </el-container>
 </template>
 
+<script setup lang="ts">
+import router from "@/router";
+import { useDark } from "@vueuse/core";
+import { ref } from "vue";
+
+type Tabs = "arclight" | "downloads" | "docs";
+
+const activateTab = ref<Tabs>("arclight");
+
+const isDark = useDark();
+
+function handleSelect(key: Tabs): void {
+  if (key === "docs") {
+    window.open("https://wiki.izzel.io");
+    return;
+  }
+  router.push(`/${key}`);
+}
+
+router.push("/arclight");
+</script>
+
 <style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
 </style>
