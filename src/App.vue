@@ -18,9 +18,9 @@
 </template>
 
 <script setup lang="ts">
-import router from "@/router";
 import { useDark } from "@vueuse/core";
 import { ref } from "vue";
+import router from "@/router";
 
 type Tabs = "arclight" | "downloads" | "docs";
 
@@ -29,10 +29,6 @@ const activateTab = ref<Tabs>("arclight");
 const isDark = useDark();
 
 function handleSelect(key: Tabs): void {
-  if (key === "docs") {
-    window.open("https://wiki.izzel.io");
-    return;
-  }
   router.push(`/${key}`);
 }
 

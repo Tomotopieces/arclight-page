@@ -1,12 +1,12 @@
 import axios from "axios";
 
-const request = axios.create({
-  baseURL: "https://files.hypertention.cn/v1/files",
+const service = axios.create({
+  baseURL: "/v1",
   timeout: 1000,
 });
 
-request.interceptors.response.use(
-  resp => resp,
+service.interceptors.response.use(
+  resp => resp.data,
   error => {
     ElMessage({
       message: error,
@@ -15,4 +15,4 @@ request.interceptors.response.use(
   },
 );
 
-export default request;
+export default service;

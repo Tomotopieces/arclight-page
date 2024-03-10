@@ -3,12 +3,12 @@
 /**
  * Stability
  */
-type Stability = "versions-snapshot" | "versions-stable" | "latest-snapshot" | "latest-stable";
+export type Stability = "versions-snapshot" | "versions-stable" | "latest-snapshot" | "latest-stable";
 
 /**
  * Request params
  */
-interface FileRequest {
+export interface FileRequest {
   branch?: string;
   stability?: Stability;
   version?: string;
@@ -19,12 +19,12 @@ interface FileRequest {
 /**
  * File type
  */
-type FileType = "directory" | "object";
+export type FileType = "directory" | "object";
 
 /**
  * Response file info
  */
-interface FileInfo {
+export interface FileInfo {
   key: string;
   name: string;
   lastModified: string;
@@ -36,7 +36,7 @@ interface FileInfo {
 /**
  * Response info
  */
-interface ResponseInfo {
+export interface ResponseInfo {
   files: FileInfo[];
   key: string;
   lastModified: string;

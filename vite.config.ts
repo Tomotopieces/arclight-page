@@ -20,7 +20,15 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url))
-    }
-  }
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
+  },
+  server: {
+    proxy: {
+      "/v1": {
+        target: "https://files.hypertention.cn",
+        changeOrigin: true,
+      },
+    },
+  },
 });
