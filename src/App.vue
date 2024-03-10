@@ -12,14 +12,18 @@
       </el-menu>
     </el-header>
     <el-main>
-      <router-view />
+      <router-view v-slot="{ Component }">
+        <transition name="el-fade-in" mode="out-in" :duration="0.5">
+          <component :is="Component" />
+        </transition>
+      </router-view>
     </el-main>
   </el-container>
 </template>
 
 <script setup lang="ts">
 import { useDark } from "@vueuse/core";
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import router from "@/router";
 
 const activateTab = ref("");

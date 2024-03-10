@@ -2,35 +2,35 @@ import service from "@/axios";
 import type { FileRequest, ResponseInfo } from "@/api/DownloadApiTypes";
 
 /**
- * list files
- *
- * @param params FileRequest
+ * list available minecraft version
  */
-export function listFiles(params: FileRequest): Promise<ResponseInfo> {
-  return service.request({
-    url: generateRequestUrl(params),
-    method: "GET",
-  });
+export function listMinecraftVersion(): Promise<ResponseInfo> {
+  return service.get("/arclight/minecraft");
 }
 
 /**
- * 请求参数拼接
+ * list available snapshot for specific minecraft version
  *
- * @param {object} params FileRequest
+ * @param {{string}} minecraftVersion specific minecraft version
  */
-function generateRequestUrl(params: FileRequest): string {
-  let url = "/files/arclight/branches";
-  if (!params.branch) {
-    return url;
-  }
-  url += `/${params.branch}`;
-  if (!params.stability) {
-    return url;
-  }
-  url += `/${params.stability}`;
-  if (!params.version) {
-    return url;
-  }
-  url += `/${params.version}`;
-  return url;
+export function listSnapshot(minecraftVersion: string): Promise<ResponseInfo> {
+  return service.get(`/arclight/minecraft/${minecraftVersion}/latest-snapshot`);
+}
+
+/**
+ * list available stable for specific minecraft version
+ *
+ * @param {{string}} minecraftVersion specific minecraft version
+ */
+export function listStable(minecraftVersion: string): Promise<ResponseInfo> {
+  return service.get(`/arclight/minecraft/${minecraftVersion}/latest-stable`);
+}
+
+/**
+ * list old version for specific minecraft version
+ *
+ * @param {{string}} minecraftVersion specific minecraft version
+ */
+export function listOldVersion(minecraftVersion: string): Promise<ResponseInfo> {
+  return service.get(`/arclight/minecraft/${minecraftVersion}/versions-snapshot`);
 }

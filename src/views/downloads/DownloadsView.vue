@@ -1,22 +1,30 @@
 <template>
   <div class="downloads-view">
-    <path-bar />
-    <el-row justify="center">
-      <el-col :span="12">
-        <el-button type="primary" class="software-option" @click="clickButton('arclight')">Arclight</el-button>
-      </el-col>
-      <el-col :span="12">
-        <el-button class="software-option">lightfall</el-button>
-      </el-col>
-    </el-row>
-    <el-row justify="center">
-      <el-col :span="12">
-        <el-button class="software-option">lightcity</el-button>
-      </el-col>
-      <el-col :span="12">
-        <el-button class="software-option">lightfall-client</el-button>
-      </el-col>
-    </el-row>
+    <transition name="el-fade-in">
+      <el-container>
+        <el-header>
+          <path-bar />
+        </el-header>
+        <el-main>
+          <el-row justify="center">
+            <el-col :span="12">
+              <el-button type="primary" class="software-option" @click="clickButton('arclight')">Arclight</el-button>
+            </el-col>
+            <el-col :span="12">
+              <el-button class="software-option">lightfall</el-button>
+            </el-col>
+          </el-row>
+          <el-row justify="center">
+            <el-col :span="12">
+              <el-button class="software-option">lightcity</el-button>
+            </el-col>
+            <el-col :span="12">
+              <el-button class="software-option">lightfall-client</el-button>
+            </el-col>
+          </el-row>
+        </el-main>
+      </el-container>
+    </transition>
   </div>
 </template>
 
@@ -38,9 +46,6 @@ function clickButton(route: string) {
 }
 
 .software-option {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     width: 100%;
     height: 100%;
     box-shadow: var(--el-box-shadow-light);
