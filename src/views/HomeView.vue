@@ -1,6 +1,6 @@
 <template>
   <div class="arclight-view">
-    ARCLIGHT
+    Something about Arclight
   </div>
 </template>
 

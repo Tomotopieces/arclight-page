@@ -1,6 +1,6 @@
 <template>
   <div class="docs-view">
-    <el-button size="large" type="primary" @click="clickButton">Docs Link</el-button>
+    <el-button size="large" type="primary" @click="clickButton">Wiki Link</el-button>
   </div>
 </template>
 

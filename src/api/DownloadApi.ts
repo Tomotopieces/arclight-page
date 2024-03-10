@@ -20,11 +20,17 @@ export function listFiles(params: FileRequest): Promise<ResponseInfo> {
  */
 function generateRequestUrl(params: FileRequest): string {
   let url = "/files/arclight/branches";
-  if (!params.branch) { return url; }
+  if (!params.branch) {
+    return url;
+  }
   url += `/${params.branch}`;
-  if (!params.stability) { return url; }
+  if (!params.stability) {
+    return url;
+  }
   url += `/${params.stability}`;
-  if (!params.version) { return url; }
+  if (!params.version) {
+    return url;
+  }
   url += `/${params.version}`;
   return url;
 }
