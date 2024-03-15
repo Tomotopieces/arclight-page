@@ -8,29 +8,16 @@ export function listMinecraftVersion(): Promise<ResponseInfo> {
   return service.get("/arclight/minecraft");
 }
 
-/**
- * list available snapshot for specific minecraft version
- *
- * @param {{string}} minecraftVersion specific minecraft version
- */
-export function listSnapshot(minecraftVersion: string): Promise<ResponseInfo> {
-  return service.get(`/arclight/minecraft/${minecraftVersion}/latest-snapshot`);
-}
-
-/**
- * list available stable for specific minecraft version
- *
- * @param {{string}} minecraftVersion specific minecraft version
- */
-export function listStable(minecraftVersion: string): Promise<ResponseInfo> {
-  return service.get(`/arclight/minecraft/${minecraftVersion}/latest-stable`);
+export function listModLoader(minecraftVersion: string): Promise<ResponseInfo> {
+  return service.get(`/arclight/minecraft/${minecraftVersion}/loaders`);
 }
 
 /**
  * list old version for specific minecraft version
  *
  * @param {{string}} minecraftVersion specific minecraft version
+ * @param modloader mod loader name
  */
-export function listOldVersion(minecraftVersion: string): Promise<ResponseInfo> {
-  return service.get(`/arclight/minecraft/${minecraftVersion}/versions-snapshot`);
+export function listVersions(minecraftVersion: string, modloader: string): Promise<ResponseInfo> {
+  return service.get(`/arclight/minecraft/${minecraftVersion}/loaders/${modloader}/versions-snapshot`);
 }

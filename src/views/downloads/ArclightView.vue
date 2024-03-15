@@ -27,14 +27,14 @@
         <el-text size="large">&nbsp;On:&nbsp;</el-text>
         <el-select
           v-model="selectedModLoader"
-          :disabled="!snapshotList.length"
+          :disabled="!loadersList.length"
           placeholder="Mod Loader"
           size="large"
           @change="onModLoaderChange"
           class="selection"
         >
           <el-option
-            v-for="(loader, index) in snapshotList"
+            v-for="(loader, index) in loadersList"
             :key="index"
             :label="loader.name"
             :value="loader.name"
@@ -57,7 +57,7 @@
                 <div class="download-button-content">
                   <div class="download-button-title">Stable</div>
                   <div class="download-button-text" v-if="stableFile">{{ getFileLastModified(stableFile) }}</div>
-                  <div class="download-button-text" v-if="stableFile">{{ stableVersion }}</div>
+                  <div class="download-button-text" v-if="stableFile">{{ stableFile.name }}</div>
                 </div>
               </el-button>
             </el-col>
@@ -71,7 +71,7 @@
                 <div class="download-button-content">
                   <div class="download-button-title">Latest</div>
                   <div class="download-button-text" v-if="snapshotFile">{{ getFileLastModified(snapshotFile) }}</div>
-                  <div class="download-button-text" v-if="snapshotFile">{{ snapshotVersion }}</div>
+                  <div class="download-button-text" v-if="snapshotFile">{{ snapshotFile.name }}</div>
                 </div>
               </el-button>
             </el-col>
@@ -83,7 +83,7 @@
       <transition name="el-fade-in">
         <el-main v-show="selectedMinecraftVersion && selectedModLoader">
           <el-text size="large">Old Versions</el-text>
-          <el-table :data="oldSnapshotList">
+          <el-table :data="snapshotList">
             <el-table-column prop="name" label="Version" />
             <el-table-column label="Date">
               <template #default="scope">
@@ -92,12 +92,12 @@
             </el-table-column>
             <el-table-column label="Download">
               <template #default="scope">
-                <el-link type="primary" :href="scope.row.link" target="_blank">download</el-link>
+                <el-link type="primary" :href="scope.row.permlink" target="_blank">download</el-link>
               </template>
             </el-table-column>
             <el-table-column label="Copy Link">
               <template #default="scope">
-                <el-button type="primary" link @click="clickCopyLink(scope.row.link)">copy</el-button>
+                <el-button type="primary" link @click="clickCopyLink(scope.row.permlink)">copy</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -109,25 +109,19 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { listMinecraftVersion, listOldVersion, listSnapshot, listStable } from "@/api/DownloadApi";
-import { FileInfo } from "@/api/DownloadApiTypes";
+import { listMinecraftVersion, listModLoader, listVersions } from '@/api/DownloadApi';
+import type { FileInfo } from "@/api/DownloadApiTypes";
 import semverCompare from "semver/functions/compare";
 import useClipboard from "vue-clipboard3";
 
 const minecraftVersionList = ref<FileInfo[]>([]);
+const loadersList = ref<FileInfo[]>([]);
 const snapshotList = ref<FileInfo[]>([]);
-const stableList = ref<FileInfo[]>([]);
-const snapshotMap = new Map<string, FileInfo>();
-const stableMap = new Map<string, FileInfo>();
 
 const selectedMinecraftVersion = ref<string>();
 const selectedModLoader = ref<string>();
 const stableFile = ref<FileInfo>();
 const snapshotFile = ref<FileInfo>();
-const stableVersion = ref<string>();
-const snapshotVersion = ref<string>();
-
-const oldSnapshotList = ref<FileInfo>([]);
 
 /**
  * Something like created
@@ -142,63 +136,28 @@ const oldSnapshotList = ref<FileInfo>([]);
     });
 })();
 
-function onMinecraftVersionChange(value: string): void {
-  listSnapshot(value)
-    .then(resp => {
-      snapshotList.value = resp.files;
-      snapshotList.value.forEach((file: FileInfo) => snapshotMap.set(file.name, file));
-    })
-    .catch(error => {
-      if (error.toString().includes("404")) {
-        snapshotList.value = [];
-        snapshotMap.clear();
-        return;
-      }
-      ElMessage({
-        message: error,
-        type: "error",
-      });
-    });
-
-  listStable(value)
-    .then(resp => {
-      stableList.value = resp.files;
-      stableList.value.forEach((file: FileInfo) => stableMap.set(file.name, file));
-    })
-    .catch((error: string) => {
-      if (error.toString().includes("404")) {
-        stableList.value = [];
-        stableMap.clear();
-        return;
-      }
-      ElMessage({
-        message: error,
-        type: "error",
-      });
-    });
-
+function onMinecraftVersionChange(value: string) {
   selectedModLoader.value = undefined;
+  loadersList.value = [];
   stableFile.value = undefined;
   snapshotFile.value = undefined;
-
-  listOldVersion(selectedMinecraftVersion.value).then(resp => {
-    oldSnapshotList.value = resp.files;
+  snapshotList.value = [];
+  listModLoader(value).then(resp => {
+    loadersList.value = resp.files;
   });
 }
 
 function onModLoaderChange(value: string): void {
-  let keywords: any;
-
-  stableFile.value = stableMap.get(value);
-  if (stableFile.value) {
-    keywords = stableFile.value.key.split("/");
-    stableVersion.value = keywords[keywords.length - 2];
-  }
-
-  snapshotFile.value = snapshotMap.get(value);
-  if (snapshotFile.value) {
-    keywords = snapshotFile.value.key.split("/");
-    snapshotVersion.value = keywords[keywords.length - 2];
+  stableFile.value = undefined;
+  snapshotFile.value = undefined;
+  snapshotList.value = [];
+  if (selectedMinecraftVersion.value) {
+    listVersions(selectedMinecraftVersion.value, value).then(resp => {
+      let sorted = resp.files.sort((a, b) => new Date(b['last-modified']).getTime() - new Date(a['last-modified']).getTime());
+      snapshotFile.value = sorted.find(() => true);
+      stableFile.value = sorted.find(a => !a.name.includes("-SNAPSHOT"));
+      snapshotList.value = sorted;
+    });
   }
 }
 
@@ -215,7 +174,7 @@ function clickCopyLink(link: string): void {
     .toClipboard(link)
     .then(() => {
       ElMessage({
-        message: "Link copied successfully",
+        message: "Link copied",
         type: "success",
       });
     });
@@ -224,43 +183,43 @@ function clickCopyLink(link: string): void {
 
 <style scoped>
 .el-col {
-    max-width: 12rem;
-    width: 12rem;
-    max-height: 7rem;
-    height: 7rem;
-    margin: 20px;
+  max-width: 12rem;
+  width: 12rem;
+  max-height: 7rem;
+  height: 7rem;
+  margin: 20px;
 }
 
 .selection {
-    width: 240px;
+  width: 240px;
 }
 
 .el-button span {
-    display: block;
+  display: block;
 }
 
 .download-button {
-    width: 100%;
-    height: 100%;
-    box-shadow: var(--el-box-shadow-light);
+  width: 100%;
+  height: 100%;
+  box-shadow: var(--el-box-shadow-light);
 }
 
 .download-button-content {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 .download-button-content * {
-    margin-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .download-button-title {
-    font-size: large;
-    color: white;
+  font-size: large;
+  color: white;
 }
 
 .download-button-text {
-    font-size: small;
-    color: white;
+  font-size: small;
+  color: white;
 }
 </style>

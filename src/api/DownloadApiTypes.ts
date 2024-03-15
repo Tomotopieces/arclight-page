@@ -27,7 +27,7 @@ export type FileType = "directory" | "object";
 export interface FileInfo {
   key: string;
   name: string;
-  lastModified: string;
+  'last-modified': string;
   link: string;
   permlink?: string;
   type: FileType;
@@ -39,5 +39,5 @@ export interface FileInfo {
 export interface ResponseInfo {
   files: FileInfo[];
   key: string;
-  lastModified: string;
+  'last-modified': string;
 }
