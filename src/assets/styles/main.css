@@ -1,0 +1,27 @@
+.title {
+    font-size: 5rem;
+    font-weight: normal;
+}
+
+.subtitle {
+    font-size: 1.8rem;
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: Poppins;
+    src: url("fonts/poppins/Poppins-Regular.ttf");
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: Poppins;
+    src: url("fonts/poppins/Poppins-Light.ttf");
+    font-weight: 300;
+}
+
+@font-face {
+    font-family: Poppins;
+    src: url("fonts/poppins/Poppins-Bold.ttf");
+    font-weight: bold;
+}

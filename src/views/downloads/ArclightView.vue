@@ -5,7 +5,7 @@
         <path-bar />
       </el-header>
       <el-main>
-        <h2>Download Arclight</h2>
+        <p class="subtitle" style="text-align: center">Download Arclight</p>
         <!-- Minecraft version selector -->
         <el-text size="large">Version:&nbsp;</el-text>
         <el-select
@@ -165,7 +165,7 @@ function getFileLastModified(file: FileInfo): string {
   return new Date(file["last-modified"]).toLocaleDateString();
 }
 
-function clickDownload(link: string): void {
+function clickDownload(link?: string): void {
   window.open(link);
 }
 

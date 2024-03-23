@@ -6,9 +6,10 @@
           <path-bar />
         </el-header>
         <el-main>
+          <p class="subtitle" style="text-align: center;">Select the software.</p>
           <el-row justify="center">
             <el-col :span="12">
-              <el-button type="primary" class="software-option" @click="clickButton('arclight')">Arclight</el-button>
+              <el-button type="primary" plain class="software-option" @click="clickButton('arclight')">Arclight</el-button>
             </el-col>
             <el-col :span="12">
               <el-button class="software-option">lightfall</el-button>
@@ -38,11 +39,11 @@ function clickButton(route: string) {
 
 <style scoped>
 .el-col {
-    max-width: 15rem;
-    width: 15rem;
-    max-height: 9.5rem;
-    height: 9.5rem;
-    margin: 5px;
+    max-width: 12rem;
+    width: 12rem;
+    max-height: 7rem;
+    height: 7rem;
+    margin: 10px;
 }
 
 .software-option {
