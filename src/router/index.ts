@@ -18,11 +18,6 @@ const router = createRouter({
       name: "arclight",
       component: () => import("../views/downloads/ArclightView.vue"),
     },
-    {
-      path: "/docs",
-      name: "docs",
-      component: () => import("../views/DocsView.vue"),
-    },
   ],
 });
 
